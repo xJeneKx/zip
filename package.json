@@ -1,0 +1,8 @@
+{
+  "name": "zip",
+  "version": "0.0.1",
+  "dependencies": {
+    "async": "^2.4.0",
+    "zip-stream": "^1.1.1"
+  }
+}
