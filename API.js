@@ -30,7 +30,7 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	});
 };
 
-API.prototype.add = function(path, name, callback) {
+API.prototype.file = function(name, path, callback) {
 	this.zip.entry(fs.createReadStream(path), {name: name}, function(err) {
 		if (callback && typeof callback === 'function') callback(err);
 	});
