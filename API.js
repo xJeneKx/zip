@@ -12,6 +12,9 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	var compressed = options.compressed || 6;
 	self.finishCallback = null;
 
+	self.queue = [];
+	self.bQueueProcessing = false;
+
 	self.zip = new zipStream({zlib: {level: compressed}});
 
 	var writeStream = fs.createWriteStream(pathToSaveArchive);
@@ -30,19 +33,39 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	});
 };
 
-API.prototype.file = function(name, path, callback) {
-	this.zip.entry(fs.createReadStream(path), {name: name}, function(err) {
-		if (callback && typeof callback === 'function') callback(err);
+API.prototype.file = function(name, path) {
+	var self = this;
+	fs.stat(path, function(err) {
+		if (err) throw err;
+		self.queue.push({name: name, data: fs.createReadStream(path)});
+		self.queueProcessing();
 	});
 };
 
-API.prototype.text = function(name, text, callback) {
-	this.zip.entry(text, {name: name}, function(err) {
-		if (callback && typeof callback === 'function') callback(err);
-	});
+API.prototype.text = function(name, text) {
+	this.queue.push({name: name, data: text});
+	this.queueProcessing();
+};
+
+API.prototype.queueProcessing = function() {
+	var self = this;
+	if(self.bQueueProcessing) return;
+	if(self.queue.length){
+		self.bQueueProcessing = true;
+		self.zip.entry(self.queue[0].data, {name: self.queue[0].name}, function(err) {
+			if(err) throw err;
+			self.queue.shift();
+			self.bQueueProcessing = false;
+			setTimeout(function(){
+				self.queueProcessing();
+			}, 10);
+		})
+	}else{
+		self.bQueueProcessing = false;
+		self.zip.finish();
+	}
 };
 
 API.prototype.end = function(callback) {
 	this.finishCallback = callback;
-	this.zip.finish();
 };
