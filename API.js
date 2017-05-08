@@ -36,6 +36,12 @@ API.prototype.file = function(name, path, callback) {
 	});
 };
 
+API.prototype.text = function(name, text, callback) {
+	this.zip.entry(text, {name: name}, function(err) {
+		if (callback && typeof callback === 'function') callback(err);
+	});
+};
+
 API.prototype.end = function(callback) {
 	this.finishCallback = callback;
 	this.zip.finish();
