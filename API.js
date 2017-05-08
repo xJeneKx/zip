@@ -9,7 +9,7 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	if (!options) options = {};
 
 	var self = this;
-	var compressed = options.compressed || 6;
+	var compressed = options.compressed === undefined ? 6 : options.compressed;
 	self.finishCallback = null;
 
 	self.queue = [];
