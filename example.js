@@ -1,4 +1,4 @@
-var zip = require('./API');
+var zip = require('zip');
 
 var archive = new zip('test.zip');
 

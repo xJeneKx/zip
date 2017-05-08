@@ -4,5 +4,21 @@
   "dependencies": {
     "async": "^2.4.0",
     "zip-stream": "^1.1.1"
-  }
+  },
+  "description": "See \"example.js\"",
+  "main": "API.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xJeneKx/zip.git"
+  },
+  "author": "xJeneK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xJeneKx/zip/issues"
+  },
+  "homepage": "https://github.com/xJeneKx/zip#readme"
 }
