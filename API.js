@@ -47,7 +47,7 @@ API.prototype.text = function(name, text) {
 	this.queueProcessing();
 };
 
-API.prototype.queueProcessing = function() {
+API.prototype.queueProcessing = function(isRepeat) {
 	var self = this;
 	if(self.bQueueProcessing) return;
 	if(self.queue.length){
@@ -56,13 +56,17 @@ API.prototype.queueProcessing = function() {
 			if(err) throw err;
 			self.queue.shift();
 			self.bQueueProcessing = false;
-			setTimeout(function(){
-				self.queueProcessing();
-			}, 10);
+			self.queueProcessing();
 		})
 	}else{
-		self.bQueueProcessing = false;
-		self.zip.finish();
+		if(isRepeat) {
+			self.bQueueProcessing = false;
+			self.zip.finish();
+		}else{
+			setTimeout(function() {
+				self.queueProcessing(true);
+			}, 1000);
+		}
 	}
 };
 
