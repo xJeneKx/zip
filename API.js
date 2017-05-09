@@ -29,7 +29,6 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	}
 
 	self.zip.on('error', function(err) {
-		throw err;
 	});
 };
 
@@ -49,20 +48,20 @@ API.prototype.text = function(name, text) {
 
 API.prototype.queueProcessing = function(isRepeat) {
 	var self = this;
-	if(self.bQueueProcessing) return;
-	if(self.queue.length){
+	if (self.bQueueProcessing) return;
+	if (self.queue.length) {
 		self.bQueueProcessing = true;
 		self.zip.entry(self.queue[0].data, {name: self.queue[0].name}, function(err) {
-			if(err) throw err;
+			if (err) throw err;
 			self.queue.shift();
 			self.bQueueProcessing = false;
 			self.queueProcessing();
 		})
-	}else{
-		if(isRepeat) {
+	} else {
+		if (isRepeat) {
 			self.bQueueProcessing = false;
 			self.zip.finish();
-		}else{
+		} else {
 			setTimeout(function() {
 				self.queueProcessing(true);
 			}, 1000);
