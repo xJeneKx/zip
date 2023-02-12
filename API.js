@@ -11,6 +11,7 @@ var API = module.exports = function(pathToSaveArchive, options) {
 	var self = this;
 	var compressed = options.compressed === undefined ? 6 : options.compressed;
 	self.finishCallback = null;
+	self.errorCallback = () => {};
 
 	self.queue = [];
 	self.bQueueProcessing = false;
@@ -28,8 +29,7 @@ var API = module.exports = function(pathToSaveArchive, options) {
 		self.zip.pipe(writeStream);
 	}
 
-	self.zip.on('error', function(err) {
-	});
+	self.zip.on('error', self.errorCallback);
 };
 
 API.prototype.file = function(name, path) {
@@ -72,3 +72,7 @@ API.prototype.queueProcessing = function(isRepeat) {
 API.prototype.end = function(callback) {
 	this.finishCallback = callback;
 };
+
+API.prototype.setErrorCB = function (callback) {
+	this.errorCallback = callback;
+}
